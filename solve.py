@@ -310,6 +310,69 @@ def find_protein_motif(dataset):
             print(i)
             print(*protein_dict[i], sep=' ')
 
+def protein_to_mrna(sequence):
+    #p.16 - print number of possible mRNA sequences that
+    #would produce given protein string, modulo 1,000,000
+
+    #generate codon table (borrowed code)
+    bases = ['U', 'C', 'A', 'G']
+    codons = [a+b+c for a in bases for b in bases for c in bases]
+    amino_acids = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
+    codon_table = dict(zip(codons, amino_acids))
+    possible_sequences = 1
+    for seq in sequence: 
+        possible_sequences *= len([i for i in codon_table.values() if i == seq])
+    #multiply by three because three possible stop codons
+    print((3 * possible_sequences) % 1000000)
+ 
+def open_reading_frames(sequence):
+    #p. 17 - given DNA sequence return all possible proteins
+    #made from open reading frames of strand and
+    #reverse strand
+    import regex as re
+    def dna_to_rna(sequence):
+        return sequence.replace('T', 'U')
+    def reverse_complement_dna(sequence):
+        complement_map = {'A':'U', 'C':'G', 'U':'A', 'G':'C'}
+        return ('').join(list(map(lambda x: complement_map[x], sequence)))[::-1]
+    def rna_to_protein(sequence):
+        bases = ['U', 'C', 'A', 'G']
+        codons = [a+b+c for a in bases for b in bases for c in bases]
+        amino_acids = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
+        codon_table = dict(zip(codons, amino_acids))
+        rna_chunked = [sequence[i:i+3] for i in range(0, len(sequence), 3)]
+        protein = "".join(list(map(lambda x: codon_table[x], rna_chunked)))
+        return protein
+    def reading_frame(sequence):
+        seq = ''
+        for codon in [sequence[i:i+3] for i in range(0, len(sequence), 3)]:
+            if codon in ["UAA", "UAG", "UGA"]:
+                seq += codon
+                return seq
+            else:
+                seq += codon
+        return 0
+    def start_index(sequence):
+        pattern = re.compile('AUG')
+        return [index.start() for index in pattern.finditer(sequence, overlapped=True)]
+    def valid_sequences(sequence, start_index):
+        seq_list = []
+        for i in start_index:
+            seq = reading_frame(sequence[i:])
+            if seq and seq not in seq_list:
+                seq_list.append(rna_to_protein(seq).replace('*', ''))
+            return seq_list                 
+
+    pattern = re.compile('AUG')
+    sequence = dna_to_rna(sequence)
+    sequence_reverse = reverse_complement_dna(sequence)
+    start_forward = start_index(sequence)
+    start_reverse = start_index(sequence_reverse)
+    forward_seqs = valid_sequences(sequence, start_forward)
+    reverse_seqs = valid_sequences(sequence_reverse, start_reverse)
+    print(*set(forward_seqs + reverse_seqs), sep='\n')
+
+
                         
 
 
