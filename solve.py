@@ -372,6 +372,64 @@ def open_reading_frames(sequence):
     reverse_seqs = valid_sequences(sequence_reverse, start_reverse)
     print(*set(forward_seqs + reverse_seqs), sep='\n')
 
+def n_permutations(number):
+    #p.18 - print number of possible
+    #permutations from 1...number
+    #as well as all of the permutations
+    import itertools
+    permutations = list(itertools.permutations([i for i in range(1, number+1)]))
+    print(len(permutations))
+    for perm in permutations:
+        print(*perm, sep=" ")
+ 
+def protein_mass(sequence):
+    #p.19 print monoisotopic mass of protein
+
+    #monoisotopic mass table
+    mass_table = {
+        "A":71.03711,
+        "C":103.00919,
+        "D":115.02694,
+        "E":129.04259,
+        "F":147.06841,
+        "G":57.02146,
+        "H":137.05891,
+        "I":113.08406,
+        "K":128.09496,
+        "L":113.08406,
+        "M":131.04049,
+        "N":114.04293,
+        "P":97.05276,
+        "Q":128.05858,
+        "R":156.10111,
+        "S":87.03203,
+        "T":101.04768,
+        "V":99.06841,
+        "W":186.07931,
+        "Y":163.06333
+        }
+    mass = 0
+    for letter in sequence:
+        mass += mass_table[letter]
+    print(mass)
+ 
+def reverse_palindrome(sequence):
+    #p.20 - print position and length of every
+    #palindrome with length between 4 and 12
+    def reverse_complement_dna(sequence):
+        complement_map = {'A':'T', 'C':'G', 'T':'A', 'G':'C'}
+        return ''.join(list(map(lambda x: complement_map[x], sequence)))[::-1]
+    kmer_dict = {}
+    counter = 0
+    for length in range(4,13):
+        for index, letter in enumerate(sequence):
+            seq = sequence[index:index + length]
+            if len(seq) == length:
+                kmer_dict[counter] = {"seq":seq, "position":index+1, "length":length, "rc":reverse_complement_dna(seq)}
+                counter += 1
+                for key, value in kmer_dict.items():
+                    if value['seq'] == value["rc"]:
+                        print(value["position"], value["length"])
 
                         
 
