@@ -431,6 +431,26 @@ def reverse_palindrome(sequence):
                     if value['seq'] == value["rc"]:
                         print(value["position"], value["length"])
 
+def rna_splicing(sequences):
+    #p.21 - return protein string resulting from DNA sequence after
+    #introns (substrings provided) have been removed
+    def dna_to_rna(sequence):
+        return sequence.replace('T', 'U')
+    def rna_to_protein(sequence):
+        bases = ['U', 'C', 'A', 'G']
+        codons = [a+b+c for a in bases for b in bases for c in bases]
+        amino_acids = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
+        codon_table = dict(zip(codons, amino_acids))
+        rna_chunked = [sequence[i:i+3] for i in range(0, len(sequence), 3)]
+        protein = "".join(list(map(lambda x: codon_table[x], rna_chunked)))
+        return protein
+    sequences = [seq[4:] for seq in sequences.split(">Rosalind_") if seq != '']
+    seq = sequences[0]
+    for intron in sequences[1:]:
+        seq = seq.replace(intron, '')
+    print(rna_to_protein(dna_to_rna(seq)).replace('*', ''))
+
+
                         
 
 
