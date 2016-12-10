@@ -450,4 +450,13 @@ def rna_splicing(sequences):
         seq = seq.replace(intron, '')
     print(rna_to_protein(dna_to_rna(seq)).replace('*', ''))
 
+def lexicographic_permutations(alphabet, string_length):
+    #p. 23 - print sorted list of every permutation of
+    #length string_length given symbols in alphabet
+    #alt. soln. - itertools.product(alphabet, repeat=string_length)
+    import itertools
+    alphabet = [x for x in alphabet.split(' ')]
+    permutations = [''.join(vals) for vals in list(itertools.permutations(string_length*alphabet, string_length))]
+    print(*sorted(set(permutations)), sep='\n')
+
 
