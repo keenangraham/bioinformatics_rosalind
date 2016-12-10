@@ -139,7 +139,7 @@ def proba_dominant_allele(homozygous_dominant, heterozygous, homozygous_recessiv
     print(sum)
 
 def rna_to_protein(sequence):
-    #p.7 - print protein sequence given DNA
+    #p.8 - print protein sequence given DNA
     #generate codon table (borrowed code)
     bases = ['U', 'C', 'A', 'G']
     codons = [a+b+c for a in bases for b in bases for c in bases]
@@ -150,7 +150,7 @@ def rna_to_protein(sequence):
     print(protein)
  
 def find_motif(sequence, motif):
-    #p.8 - find index of motif given sequence
+    #p.9 - find index of motif given sequence
     #alt. soln. if sequence[i:].startswith(motif)
     motif_length = len(motif)
     index_list = []
@@ -160,7 +160,7 @@ def find_motif(sequence, motif):
     print(index_list)
  
 def find_profile(sequences):
-    #p.9 - generate profile and consensus string given many sequences
+    #p.10 - generate profile and consensus string given many sequences
     import numpy as np
     sequence_list = sequences.split('>Rosalind_')
     sequence_list = [seq[4:] for seq in sequence_list if seq != '']
@@ -200,7 +200,7 @@ def fibonacci(max_value):
     print(*fibonacci_generator(max_value), sep='\n')
 
 def mortal_rabbits(months, life_span):
-    #p.10 - print number of rabbits after given number of months
+    #p.11 - print number of rabbits after given number of months
     #and given lifespan
     life_span -= 1
     baby_rabbit_pairs = 1
@@ -214,7 +214,7 @@ def mortal_rabbits(months, life_span):
     print(baby_rabbit_pairs + mature_rabbit_pairs)
 
 def overlap_graphs(sequences):
-    #p.11 - print list of sequences where last three letters of string one
+    #p.12 - print list of sequences where last three letters of string one
     #match first three letters of string two
     sequences = sequences.split(">Rosalind_")
     sequences = [seq for seq in sequences if seq != '']
@@ -227,7 +227,7 @@ def overlap_graphs(sequences):
                     print("Rosalind_{} Rosalind_{}".format(seq_id_two, seq_id_one))
 
 def expected_offspring(genotype_population):
-    #p.12 - print expected number of offspring with dominant allele
+    #p.13 - print expected number of offspring with dominant allele
     #given number of mating couples with certain alleles
     #AA-AA, AA-Aa, AA-aa, Aa-Aa, Aa-aa, aa-aa
     
@@ -242,7 +242,7 @@ def expected_offspring(genotype_population):
     print(expected_value)
 
 def shared_motif(sequences):
-    #p.13 - print longest shared motif contained in all sequences
+    #p.14 - print longest shared motif contained in all sequences
     sequences = sequences.split(">Rosalind_")
     sequences = [seq[4:] for seq in sequences if seq != '']
     longest_motif = ''
@@ -267,7 +267,7 @@ def shared_motif(sequences):
     print(longest_motif)
 
 def calc_proba_heterozygous(generation, number_with_trait):
-    #p.14 - print probability of seeing number_with_trait individuals
+    #p.15 - print probability of seeing number_with_trait individuals
     #heterozygous for two independent traits in specified generation
     #assuming each descendant mates with a heterozygous individual
     #and has two offspring
@@ -290,7 +290,7 @@ def calc_proba_heterozygous(generation, number_with_trait):
     print(proba_heterozygous)
  
 def find_protein_motif(dataset):
-    #p.15 - return proteins in given dataset with
+    #p.16 - return proteins in given dataset with
     #N-glycosylation motif: N{P}[ST]{P}
     
     #pull sequences from UniProt
@@ -311,7 +311,7 @@ def find_protein_motif(dataset):
             print(*protein_dict[i], sep=' ')
 
 def protein_to_mrna(sequence):
-    #p.16 - print number of possible mRNA sequences that
+    #p.17 - print number of possible mRNA sequences that
     #would produce given protein string, modulo 1,000,000
 
     #generate codon table (borrowed code)
@@ -326,7 +326,7 @@ def protein_to_mrna(sequence):
     print((3 * possible_sequences) % 1000000)
  
 def open_reading_frames(sequence):
-    #p. 17 - given DNA sequence return all possible proteins
+    #p. 18 - given DNA sequence return all possible proteins
     #made from open reading frames of strand and
     #reverse strand
     import regex as re
@@ -373,7 +373,7 @@ def open_reading_frames(sequence):
     print(*set(forward_seqs + reverse_seqs), sep='\n')
 
 def n_permutations(number):
-    #p.18 - print number of possible
+    #p.19 - print number of possible
     #permutations from 1...number
     #as well as all of the permutations
     import itertools
@@ -383,7 +383,7 @@ def n_permutations(number):
         print(*perm, sep=" ")
  
 def protein_mass(sequence):
-    #p.19 print monoisotopic mass of protein
+    #p.20 print monoisotopic mass of protein
 
     #monoisotopic mass table
     mass_table = {
@@ -414,7 +414,7 @@ def protein_mass(sequence):
     print(mass)
  
 def reverse_palindrome(sequence):
-    #p.20 - print position and length of every
+    #p.21 - print position and length of every
     #palindrome with length between 4 and 12
     def reverse_complement_dna(sequence):
         complement_map = {'A':'T', 'C':'G', 'T':'A', 'G':'C'}
@@ -432,7 +432,7 @@ def reverse_palindrome(sequence):
                         print(value["position"], value["length"])
 
 def rna_splicing(sequences):
-    #p.21 - return protein string resulting from DNA sequence after
+    #p.22 - return protein string resulting from DNA sequence after
     #introns (substrings provided) have been removed
     def dna_to_rna(sequence):
         return sequence.replace('T', 'U')
@@ -449,9 +449,5 @@ def rna_splicing(sequences):
     for intron in sequences[1:]:
         seq = seq.replace(intron, '')
     print(rna_to_protein(dna_to_rna(seq)).replace('*', ''))
-
-
-                        
-
 
 
