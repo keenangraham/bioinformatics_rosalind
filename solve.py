@@ -459,4 +459,80 @@ def lexicographic_permutations(alphabet, string_length):
     permutations = [''.join(vals) for vals in list(itertools.permutations(string_length*alphabet, string_length))]
     print(*sorted(set(permutations)), sep='\n')
 
+def longest_subsequence(number, sequence, reverse=False):
+    #p.24 - print longest increasing subsequence followed
+    #by longest decreasing subsequence given permutation of 
+    #number-element list, e.g. (8, 2, 1, 6, 5, 7, 4, 3, 9)
+    #returns (2, 6, 7, 9) and (8, 6, 5, 4, 3)
+    #alt. soln - keep tuples of len and sequence for number in array;
+    #for each number in the sequence find the longest subsquence
+    #that ends with a number less than the current number,
+    #add number to end of the sequence, increment length: 
+    #sub_array = [(0),[])]*(number+1)
+    #for number in sequence:
+    #    length, subsequence = max(sub_array[:number])
+    #    sub_array[number] = (length+1, subsequence+[number])
+    #alt. soln #2 (fastest) - use Patience sorting, recover
+    #longeset subsequence by keeping track of len of previous
+    #pile when card is added to new pile, follow pointers
+    #back starting with last pile
+    def possible_routes(sequence, descending=True):
+        if descending:
+            sequence = sequence[::-1]
+        route_dict = {}
+        for index, num in enumerate(sequence):
+            possible_destinations = []
+            for destination in sequence[index:]:
+                if destination > num:
+                    possible_destinations.append(destination)
+            if not possible_destinations: 
+                possible_destinations = [0]
+            route_dict[num] = possible_destinations
+        return route_dict
+    def routes_to_distances(route_dict):
+        max_value_dict = {}
+        for key, value in sorted(route_dict.items(), reverse=True):
+            if value == [0]:
+                max_value_dict[key] = 0
+            else:
+                distances = max(map(lambda x: max_value_dict[x] + 1, value))
+                max_value_dict[key] = distances
+        distances_dict = {}
+        for key, value in sorted(route_dict.items(), reverse=True):
+            distance = []
+            if value == [0]:
+                distances_dict[key] = [0]
+            else:
+                distance = list(map(lambda x: max_value_dict[x] + 1, value))
+            if distance:
+                distances_dict[key] = distance
+        return distances_dict
+    def recreate_path(route_dict, distances_raw, lowest_start, descending=True):
+        zipped_dict = {}
+        for key, values in route_dict.items():
+            zipped_dict[key] = {distance: destination for distance, destination in zip(distances_raw[key],route_dict[key])}
+        longest_route = [lowest_start]
+        destination = zipped_dict[lowest_start][max(zipped_dict[lowest_start])]
+        while destination != 0:
+            longest_route.append(destination)
+            destination = zipped_dict[destination][max(zipped_dict[destination])]
+        if descending:
+            return longest_route[::-1]
+        else:
+            return longest_route
+
+    asc_route_dict = possible_routes(sequence, descending=False)
+    asc_distances_raw = routes_to_distances(asc_route_dict)
+    asc_distances_max = {key: max(values) for key, values in asc_distances_raw.items()}
+    asc_lowest_start = max(asc_distances_max, key=asc_distances_max.get)
+    
+    print(*recreate_path(asc_route_dict, asc_distances_raw, asc_lowest_start, descending=False), sep=' ')
+    
+    desc_route_dict = possible_routes(sequence)
+    desc_distances_raw = routes_to_distances(desc_route_dict)
+    desc_distances_max = {key: max(values) for key, values in desc_distances_raw.items()}
+    desc_lowest_start = max(desc_distances_max, key=desc_distances_max.get)
+    
+    print(*recreate_path(desc_route_dict, desc_distances_raw, desc_lowest_start), sep=' ')
+
 
