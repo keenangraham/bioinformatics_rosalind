@@ -585,10 +585,10 @@ def shortest_superstring(sequences, brute=True):
                 sequences.append(merged_sequence)
             except:
                 count += 1
-                if len(sequences) == 1:
-                    shortest_sequence = sequences[0]
-                    break
-                if count == 15:
-                    shortest_sequence = "".join(sequences)
-                    break
+            if len(sequences) == 1:
+                shortest_sequence = sequences[0]
+                break
+            if count == 15:
+                shortest_sequence = "".join(sequences)
+                break
         return shortest_sequence
