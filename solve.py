@@ -459,7 +459,7 @@ def lexicographic_permutations(alphabet, string_length):
     permutations = [''.join(vals) for vals in list(itertools.permutations(string_length*alphabet, string_length))]
     print(*sorted(set(permutations)), sep='\n')
 
-def longest_subsequence(number, sequence, reverse=False):
+def longest_subsequence(number, sequence):
     #p.24 - print longest increasing subsequence followed
     #by longest decreasing subsequence given permutation of 
     #number-element list, e.g. (8, 2, 1, 6, 5, 7, 4, 3, 9)
@@ -535,4 +535,61 @@ def longest_subsequence(number, sequence, reverse=False):
     
     print(*recreate_path(desc_route_dict, desc_distances_raw, desc_lowest_start), sep=' ')
 
-
+def shortest_superstring(sequences, brute=True):
+    #p.25 - print shortest superstring that
+    #contains every subsequence in sequences
+    import itertools
+    sequences = [seq[4:] for seq in sequences.split('>Rosalind_') if seq != '']
+    #using brute force method
+    if brute:
+        best_sequence = "".join(sequences)
+        for perm in itertools.permutations(sequences):
+            shortest_sequence = perm[0]
+            for index, seq in enumerate(perm):
+                if index == 0:
+                    continue
+                longest_start = ''
+                for length, letter in enumerate(seq):
+                    if shortest_sequence.endswith(seq[:length]):
+                        longest_start = seq[:length]
+                    else:
+                        continue
+                if longest_start:
+                    shortest_sequence = seq.replace(longest_start, shortest_sequence)
+                else:
+                    shortest_sequence = shortest_sequence + seq
+            if len(shortest_sequence) < len(best_sequence):
+                best_sequence = shortest_sequence
+        print(best_sequence)
+    #using greedy method
+    else:
+        final_sequence = ''
+        def longest_overlap(sequences_permutations):
+            longest_overlap = ("", "", "")
+            for seq_one, seq_two in sequences_permutations:
+                for length in range(len(seq_two) - 1, -1, -1):
+                    if seq_one.endswith(seq_two[:length]):
+                        if len(seq_two[:length]) > len(longest_overlap[0]):
+                            longest_overlap = (seq_two[:length], seq_one, seq_two)
+                for length in range(len(seq_one) - 1, -1, -1):
+                    if seq_two.endswith(seq_one[:length]):
+                        if len(seq_one[:length]) > len(longest_overlap[0]):
+                            longest_overlap = (seq_one[:length], seq_two, seq_one)
+            return longest_overlap
+        count=0
+        while True:
+            longest = longest_overlap(list(itertools.permutations(sequences, 2)))
+            merged_sequence = longest[1].replace(longest[0], longest[2])
+            try:
+                sequences.remove(longest[1])
+                sequences.remove(longest[2])
+                sequences.append(merged_sequence)
+            except:
+                count += 1
+                if len(sequences) == 1:
+                    shortest_sequence = sequences[0]
+                    break
+                if count == 15:
+                    shortest_sequence = "".join(sequences)
+                    break
+        return shortest_sequence
