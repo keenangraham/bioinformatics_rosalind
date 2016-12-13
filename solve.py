@@ -563,7 +563,6 @@ def shortest_superstring(sequences, brute=True):
         print(best_sequence)
     #using greedy method
     else:
-        final_sequence = ''
         def longest_overlap(sequences_permutations):
             longest_overlap = ("", "", "")
             for seq_one, seq_two in sequences_permutations:
