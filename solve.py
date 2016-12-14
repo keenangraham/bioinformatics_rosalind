@@ -2,7 +2,7 @@
 #each function returns an answer to specified question given proper input
 
 def nucleotide_count(sequence):
-    #p.1 - print ACGT count separated by spaces
+    #p.1 - return ACGT count separated by spaces
     #alt. soln.: return sequence.count('A'), sequence.count('C'), etc. 
     seq = sequence.upper()
     seq_dict = {}
@@ -10,7 +10,7 @@ def nucleotide_count(sequence):
         if letter not in seq_dict.keys():
             seq_dict[letter] = 0
         seq_dict[letter] += 1
-    print(seq_dict['A'], seq_dict['C'], seq_dict['G'], seq_dict['T'])
+    return(seq_dict['A'], seq_dict['C'], seq_dict['G'], seq_dict['T'])
 
 def dna_to_rna(sequence):
     #p.2 - convert DNA to RNA by replacing T with U
@@ -592,3 +592,5 @@ def shortest_superstring(sequences, brute=True):
                 shortest_sequence = "".join(sequences)
                 break
         return shortest_sequence
+
+
