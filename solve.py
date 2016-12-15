@@ -1,6 +1,9 @@
 #solve bioinformatics problems on Rosalind (http://rosalind.info/)
 #each function returns an answer to specified question given proper input
 
+#note: some minor formatting of the input and output may be required
+#for Rosalind to accept answer as correct
+
 def nucleotide_count(sequence):
     #p.1 - return ACGT count separated by spaces
     #alt. soln.: return sequence.count('A'), sequence.count('C'), etc. 
@@ -14,13 +17,13 @@ def nucleotide_count(sequence):
 
 def dna_to_rna(sequence):
     #p.2 - convert DNA to RNA by replacing T with U
-    print(sequence.replace('T', 'U'))
+    return sequence.replace('T', 'U')
 
 def reverse_complement_dna(sequence):
     #p.3 - output reverse complement DNA
     # A:T, C:G
     complement_map = {'A':'T', 'C':'G', 'T':'A', 'G':'C'}
-    print(''.join(list(map(lambda x: complement_map[x], sequence)))[::-1])
+    return ''.join(list(map(lambda x: complement_map[x], sequence)))[::-1]
 
 def fibonacci_rabbits(months, litter_size):
     #p.4 - output no. of pairs of mature rabbits after given no. of months, litter_size
@@ -28,16 +31,13 @@ def fibonacci_rabbits(months, litter_size):
     baby_rabbits = 1
     for i in range(months+1):
         if i == 0: 
-            print('month: {}, mature: {}, baby: {}'.format(i, mature_rabbits, baby_rabbits))
             continue
         if i == 1:
             mature_rabbits = mature_rabbits + baby_rabbits
             baby_rabbits = 0
-            print('month: {}, mature: {}, baby: {}'.format(i, mature_rabbits, baby_rabbits))
             continue
-        mature_rabbits, baby_rabbits = mature_rabbits+baby_rabbits,mature_rabbits*litter_size        
-        print('month: {}, mature: {}, baby: {}'.format(i, mature_rabbits, baby_rabbits))
-    print('total pairs: {}'.format(int(mature_rabbits/2)))
+        mature_rabbits, baby_rabbits = mature_rabbits+baby_rabbits,mature_rabbits*litter_size
+    return int(mature_rabbits/2)
 
 def find_gc_content(fasta):
     #p.5 - parses >Rosalind_xxxx FASTA file, returns name and GC percent of sequence with max GC content
@@ -51,7 +51,7 @@ def find_gc_content(fasta):
         gc_content = ((sequence.count('G') + sequence.count('C'))/seq_length)*100
         sequence_dict[id] = gc_content
     max_gc = max(sequence_dict, key=sequence_dict.get)
-    print('Rosalind_{} has the highest GC content at {}%'.format(max_gc, sequence_dict[max_gc]))
+    return 'Rosalind_{} {}'.format(max_gc, sequence_dict[max_gc]) 
 
 def find_hamming_distance(first_sequence, second_sequence):
     #p.6 - output Hamming distance between first and second sequence
@@ -60,7 +60,7 @@ def find_hamming_distance(first_sequence, second_sequence):
     for i, y in enumerate(first_sequence):
         if first_sequence[i] != second_sequence[i]:
             score += 1
-    print(score)
+    return score
 
 def proba_dominant_allele(homozygous_dominant, heterozygous, homozygous_recessive):
     #p.7 - given proportions of population homozygous dominant/recessive and heterozygous
@@ -132,11 +132,11 @@ def proba_dominant_allele(homozygous_dominant, heterozygous, homozygous_recessiv
        for second_choice in choice_list:
            second_proba = mating_dict['prob_'+second_choice]
            proba_dict[first_choice + '_' + second_choice] = first_proba * second_proba
-           print(first_choice, first_proba, second_choice, second_proba)
+           #print(first_choice, first_proba, second_choice, second_proba)
     sum = 0
     for key in proba_dict.keys():
         sum = sum + (proba_dict[key]*dom_allele_map[key])
-    print(sum)
+    return sum
 
 def rna_to_protein(sequence):
     #p.8 - print protein sequence given DNA
@@ -147,7 +147,7 @@ def rna_to_protein(sequence):
     codon_table = dict(zip(codons, amino_acids))
     rna_chunked = [sequence[i:i+3] for i in range(0, len(sequence), 3)]
     protein = "".join(list(map(lambda x: codon_table[x], rna_chunked)))
-    print(protein)
+    return protein.replace("*", "")
  
 def find_motif(sequence, motif):
     #p.9 - find index of motif given sequence
@@ -157,7 +157,7 @@ def find_motif(sequence, motif):
     for i, y in enumerate(sequence):
         if sequence[i:i+motif_length] == motif:
             index_list.append(i+1)
-    print(index_list)
+    return index_list
  
 def find_profile(sequences):
     #p.10 - generate profile and consensus string given many sequences
@@ -383,7 +383,7 @@ def n_permutations(number):
         print(*perm, sep=" ")
  
 def protein_mass(sequence):
-    #p.20 print monoisotopic mass of protein
+    #p.20 - print monoisotopic mass of protein
 
     #monoisotopic mass table
     mass_table = {
@@ -451,7 +451,7 @@ def rna_splicing(sequences):
     print(rna_to_protein(dna_to_rna(seq)).replace('*', ''))
 
 def lexicographic_permutations(alphabet, string_length):
-    #p. 23 - print sorted list of every permutation of
+    #p.23 - print sorted list of every permutation of
     #length string_length given symbols in alphabet
     #alt. soln. - itertools.product(alphabet, repeat=string_length)
     import itertools
