@@ -159,11 +159,12 @@ def find_motif(sequence, motif):
             index_list.append(i+1)
     return index_list
  
-def find_profile(sequences):
-    #p.10 - generate profile and consensus string given many sequences
+def find_profile(sequences, test=False):
+    #p.10 - return profile and consensus string given many sequences
     import numpy as np
+    parse_length = 1 if test else 4
     sequence_list = sequences.split('>Rosalind_')
-    sequence_list = [seq[4:] for seq in sequence_list if seq != '']
+    sequence_list = [seq[parse_length:] for seq in sequence_list if seq != '']
     sequence_length = len(sequence_list[0])
     sequence_list = np.array([[i for i in seq] for seq in sequence_list])
     seq_dict = {}
@@ -175,9 +176,8 @@ def find_profile(sequences):
         seq_dict[i] = count_dict
         max_key = max(count_dict, key=count_dict.get)
         consensus_seq = consensus_seq + max_key
-       
-    print(consensus_seq)
-    print('')
+
+    profile_dict = {}
     for letter in profile_list:
         letter_row = []
         for item in seq_dict.items():
@@ -185,8 +185,8 @@ def find_profile(sequences):
                 letter_row.append(item[1][letter])
             except:
                 letter_row.append(0)
-        print('{}: {}'.format(letter, ' '.join(str(x) for x in letter_row)))
-        print('')
+        profile_dict[letter] = ' '.join(str(x) for x in letter_row)
+    return (consensus_seq, profile_dict)
 
 def fibonacci(max_value):
     #example of Fibonacci sequence using yield statement
@@ -200,7 +200,7 @@ def fibonacci(max_value):
     print(*fibonacci_generator(max_value), sep='\n')
 
 def mortal_rabbits(months, life_span):
-    #p.11 - print number of rabbits after given number of months
+    #p.11 - return number of rabbits after given number of months
     #and given lifespan
     life_span -= 1
     baby_rabbit_pairs = 1
@@ -211,11 +211,12 @@ def mortal_rabbits(months, life_span):
         baby_rabbit_pairs, mature_rabbit_pairs = mature_rabbit_pairs,\
             mature_rabbit_pairs + baby_rabbit_pairs\
             - (baby_rabbit_list[i-life_span] if i >= life_span else 0)
-    print(baby_rabbit_pairs + mature_rabbit_pairs)
+    return baby_rabbit_pairs + mature_rabbit_pairs
 
 def overlap_graphs(sequences):
     #p.12 - print list of sequences where last three letters of string one
     #match first three letters of string two
+    overlaps = []
     sequences = sequences.split(">Rosalind_")
     sequences = [seq for seq in sequences if seq != '']
     for seq_one in sequences:
@@ -224,7 +225,8 @@ def overlap_graphs(sequences):
             seq_id_two = seq_two[:4]
             if seq_id_one != seq_id_two:
                 if seq_one[4:].startswith(seq_two[-3:]):
-                    print("Rosalind_{} Rosalind_{}".format(seq_id_two, seq_id_one))
+                    overlaps.append("Rosalind_{} Rosalind_{}".format(seq_id_two, seq_id_one))
+    return overlaps                
 
 def expected_offspring(genotype_population):
     #p.13 - print expected number of offspring with dominant allele
@@ -239,12 +241,13 @@ def expected_offspring(genotype_population):
     for z in zip_proba_genotype:
         a, b = z
         expected_value = expected_value + 2*(a*b)
-    print(expected_value)
+    return expected_value
 
-def shared_motif(sequences):
+def shared_motif(sequences, test=False):
     #p.14 - print longest shared motif contained in all sequences
+    parse_length = 1 if test else 4
     sequences = sequences.split(">Rosalind_")
-    sequences = [seq[4:] for seq in sequences if seq != '']
+    sequences = [seq[parse_length:] for seq in sequences if seq != '']
     longest_motif = ''
     all_contain_motif = True
     for index, letter in enumerate(sequences[0]):
@@ -263,7 +266,7 @@ def shared_motif(sequences):
                         longest_motif = motif
                         motif_length += 1
                         if motif_length > len(sequences[0]):
-                            break
+                        	break
     print(longest_motif)
 
 def calc_proba_heterozygous(generation, number_with_trait):
