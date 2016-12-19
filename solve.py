@@ -254,20 +254,20 @@ def shared_motif(sequences, test=False):
         motif_length = 1
         all_contain_motif = True
         while all_contain_motif:
-    #could instead start with longest sequence and shorten
-    #for more efficiency
+            #could instead start with longest sequence and shorten
+            #for more efficiency
             motif = sequences[0][index:index+motif_length]
             for seq in sequences:
                 if motif not in seq:
                     all_contain_motif = False
                     break
-                if all_contain_motif:
-                    if len(motif) > len(longest_motif):
-                        longest_motif = motif
-                        motif_length += 1
-                        if motif_length > len(sequences[0]):
-                        	break
-    print(longest_motif)
+            if all_contain_motif:
+                if len(motif) > len(longest_motif):
+                    longest_motif = motif
+                motif_length += 1
+                if motif_length > len(sequences[0]):
+                    break
+    return longest_motif
 
 def calc_proba_heterozygous(generation, number_with_trait):
     #p.15 - print probability of seeing number_with_trait individuals
