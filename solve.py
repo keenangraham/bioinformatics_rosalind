@@ -139,7 +139,7 @@ def proba_dominant_allele(homozygous_dominant, heterozygous, homozygous_recessiv
     return sum
 
 def rna_to_protein(sequence):
-    #p.8 - print protein sequence given DNA
+    #p.8 - return protein sequence given DNA
     #generate codon table (borrowed code)
     bases = ['U', 'C', 'A', 'G']
     codons = [a+b+c for a in bases for b in bases for c in bases]
@@ -214,7 +214,7 @@ def mortal_rabbits(months, life_span):
     return baby_rabbit_pairs + mature_rabbit_pairs
 
 def overlap_graphs(sequences):
-    #p.12 - print list of sequences where last three letters of string one
+    #p.12 - return list of sequences where last three letters of string one
     #match first three letters of string two
     overlaps = []
     sequences = sequences.split(">Rosalind_")
@@ -229,7 +229,7 @@ def overlap_graphs(sequences):
     return overlaps                
 
 def expected_offspring(genotype_population):
-    #p.13 - print expected number of offspring with dominant allele
+    #p.13 - return expected number of offspring with dominant allele
     #given number of mating couples with certain alleles
     #AA-AA, AA-Aa, AA-aa, Aa-Aa, Aa-aa, aa-aa
     
@@ -244,7 +244,7 @@ def expected_offspring(genotype_population):
     return expected_value
 
 def shared_motif(sequences, test=False):
-    #p.14 - print longest shared motif contained in all sequences
+    #p.14 - return longest shared motif contained in all sequences
     parse_length = 1 if test else 4
     sequences = sequences.split(">Rosalind_")
     sequences = [seq[parse_length:] for seq in sequences if seq != '']
@@ -270,7 +270,7 @@ def shared_motif(sequences, test=False):
     return longest_motif
 
 def calc_proba_heterozygous(generation, number_with_trait):
-    #p.15 - print probability of seeing number_with_trait individuals
+    #p.15 - return probability of seeing number_with_trait individuals
     #heterozygous for two independent traits in specified generation
     #assuming each descendant mates with a heterozygous individual
     #and has two offspring
@@ -290,7 +290,7 @@ def calc_proba_heterozygous(generation, number_with_trait):
         number_of_combinations = math.factorial(number_offspring)/(math.factorial(num)*(math.factorial((number_no_trait))))
         proba_of_number_with_trait = (3/4)**(number_no_trait) * (1/4)**(num)
         proba_heterozygous = proba_heterozygous + (proba_of_number_with_trait * number_of_combinations)
-    print(proba_heterozygous)
+    return proba_heterozygous
  
 def find_protein_motif(dataset):
     #p.16 - return proteins in given dataset with
@@ -309,12 +309,11 @@ def find_protein_motif(dataset):
         pattern = re.compile('N[^P][ST][^P]')
         positions = [index.start() + 1 for index in pattern.finditer(seq, overlapped=True)]
         protein_dict[i] = positions
-        if protein_dict[i]:
-            print(i)
-            print(*protein_dict[i], sep=' ')
+    protein_dict = {key: value for key, value in protein_dict.items() if value}
+    return protein_dict
 
 def protein_to_mrna(sequence):
-    #p.17 - print number of possible mRNA sequences that
+    #p.17 - return number of possible mRNA sequences that
     #would produce given protein string, modulo 1,000,000
 
     #generate codon table (borrowed code)
@@ -326,10 +325,10 @@ def protein_to_mrna(sequence):
     for seq in sequence: 
         possible_sequences *= len([i for i in codon_table.values() if i == seq])
     #multiply by three because three possible stop codons
-    print((3 * possible_sequences) % 1000000)
+    return (3 * possible_sequences) % 1000000
  
 def open_reading_frames(sequence):
-    #p. 18 - given DNA sequence return all possible proteins
+    #p. 17 - given DNA sequence return all possible proteins
     #made from open reading frames of strand and
     #reverse strand
     import regex as re
@@ -364,7 +363,7 @@ def open_reading_frames(sequence):
             seq = reading_frame(sequence[i:])
             if seq and seq not in seq_list:
                 seq_list.append(rna_to_protein(seq).replace('*', ''))
-            return seq_list                 
+        return seq_list
 
     pattern = re.compile('AUG')
     sequence = dna_to_rna(sequence)
@@ -373,20 +372,18 @@ def open_reading_frames(sequence):
     start_reverse = start_index(sequence_reverse)
     forward_seqs = valid_sequences(sequence, start_forward)
     reverse_seqs = valid_sequences(sequence_reverse, start_reverse)
-    print(*set(forward_seqs + reverse_seqs), sep='\n')
+    return set(forward_seqs + reverse_seqs)
 
 def n_permutations(number):
-    #p.19 - print number of possible
+    #p.19 - return number of possible
     #permutations from 1...number
-    #as well as all of the permutations
+    #as well as a list of all of the permutations
     import itertools
     permutations = list(itertools.permutations([i for i in range(1, number+1)]))
-    print(len(permutations))
-    for perm in permutations:
-        print(*perm, sep=" ")
+    return (len(permutations), permutations)
  
 def protein_mass(sequence):
-    #p.20 - print monoisotopic mass of protein
+    #p.20 - return monoisotopic mass of protein
 
     #monoisotopic mass table
     mass_table = {
@@ -414,15 +411,16 @@ def protein_mass(sequence):
     mass = 0
     for letter in sequence:
         mass += mass_table[letter]
-    print(mass)
+    return mass
  
 def reverse_palindrome(sequence):
-    #p.21 - print position and length of every
+    #p.20 - print position and length of every
     #palindrome with length between 4 and 12
     def reverse_complement_dna(sequence):
         complement_map = {'A':'T', 'C':'G', 'T':'A', 'G':'C'}
         return ''.join(list(map(lambda x: complement_map[x], sequence)))[::-1]
     kmer_dict = {}
+    kmer_list = []
     counter = 0
     for length in range(4,13):
         for index, letter in enumerate(sequence):
@@ -430,11 +428,12 @@ def reverse_palindrome(sequence):
             if len(seq) == length:
                 kmer_dict[counter] = {"seq":seq, "position":index+1, "length":length, "rc":reverse_complement_dna(seq)}
                 counter += 1
-                for key, value in kmer_dict.items():
-                    if value['seq'] == value["rc"]:
-                        print(value["position"], value["length"])
+    for key, value in kmer_dict.items():
+        if value['seq'] == value["rc"]:
+            kmer_list.append((value["position"], value["length"]))
+    return kmer_list
 
-def rna_splicing(sequences):
+def rna_splicing(sequences, test=False):
     #p.22 - return protein string resulting from DNA sequence after
     #introns (substrings provided) have been removed
     def dna_to_rna(sequence):
@@ -447,11 +446,12 @@ def rna_splicing(sequences):
         rna_chunked = [sequence[i:i+3] for i in range(0, len(sequence), 3)]
         protein = "".join(list(map(lambda x: codon_table[x], rna_chunked)))
         return protein
-    sequences = [seq[4:] for seq in sequences.split(">Rosalind_") if seq != '']
+    parse_length = 2 if test else 4
+    sequences = [seq[parse_length:] for seq in sequences.split(">Rosalind_") if seq != '']
     seq = sequences[0]
     for intron in sequences[1:]:
         seq = seq.replace(intron, '')
-    print(rna_to_protein(dna_to_rna(seq)).replace('*', ''))
+    return rna_to_protein(dna_to_rna(seq)).replace('*', '')
 
 def lexicographic_permutations(alphabet, string_length):
     #p.23 - print sorted list of every permutation of
@@ -460,7 +460,7 @@ def lexicographic_permutations(alphabet, string_length):
     import itertools
     alphabet = [x for x in alphabet.split(' ')]
     permutations = [''.join(vals) for vals in list(itertools.permutations(string_length*alphabet, string_length))]
-    print(*sorted(set(permutations)), sep='\n')
+    return sorted(set(permutations))
 
 def longest_subsequence(number, sequence):
     #p.24 - print longest increasing subsequence followed
@@ -529,20 +529,19 @@ def longest_subsequence(number, sequence):
     asc_distances_max = {key: max(values) for key, values in asc_distances_raw.items()}
     asc_lowest_start = max(asc_distances_max, key=asc_distances_max.get)
     
-    print(*recreate_path(asc_route_dict, asc_distances_raw, asc_lowest_start, descending=False), sep=' ')
-    
     desc_route_dict = possible_routes(sequence)
     desc_distances_raw = routes_to_distances(desc_route_dict)
     desc_distances_max = {key: max(values) for key, values in desc_distances_raw.items()}
     desc_lowest_start = max(desc_distances_max, key=desc_distances_max.get)
     
-    print(*recreate_path(desc_route_dict, desc_distances_raw, desc_lowest_start), sep=' ')
+    return ((recreate_path(asc_route_dict, asc_distances_raw, asc_lowest_start, descending=False), (recreate_path(desc_route_dict, desc_distances_raw, desc_lowest_start))))
 
-def shortest_superstring(sequences, brute=True):
+def shortest_superstring(sequences, brute=True, test=False):
     #p.25 - print shortest superstring that
     #contains every subsequence in sequences
     import itertools
-    sequences = [seq[4:] for seq in sequences.split('>Rosalind_') if seq != '']
+    parse_length = 2 if test else 4
+    sequences = [seq[parse_length:] for seq in sequences.split('>Rosalind_') if seq != '']
     #using brute force method
     if brute:
         best_sequence = "".join(sequences)
@@ -563,7 +562,7 @@ def shortest_superstring(sequences, brute=True):
                     shortest_sequence = shortest_sequence + seq
             if len(shortest_sequence) < len(best_sequence):
                 best_sequence = shortest_sequence
-        print(best_sequence)
+        return best_sequence
     #using greedy method
     else:
         def longest_overlap(sequences_permutations):
@@ -578,7 +577,7 @@ def shortest_superstring(sequences, brute=True):
                         if len(seq_one[:length]) > len(longest_overlap[0]):
                             longest_overlap = (seq_one[:length], seq_two, seq_one)
             return longest_overlap
-        count=0
+        count = 0
         while True:
             longest = longest_overlap(list(itertools.permutations(sequences, 2)))
             merged_sequence = longest[1].replace(longest[0], longest[2])
