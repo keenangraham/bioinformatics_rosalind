@@ -80,7 +80,7 @@ class SolveTests(unittest.TestCase):
         self.assertEqual(solve.overlap_graphs(sequences), overlaps)
 
     #p.13
-    def expected_offspring(self):
+    def test_expected_offspring(self):
         genotype_population = '1 0 0 1 0 1'
         expected_value = 3.5
         self.assertEqual(solve.expected_offspring(genotype_population), expected_value)
@@ -93,47 +93,71 @@ class SolveTests(unittest.TestCase):
 
     #p.15
     def test_calc_proba_heterozygous(self):
-        pass
+        generation, number_with_trait = 2, 1
+        proba_heterozygous = 0.684
+        self.assertAlmostEqual(solve.calc_proba_heterozygous(generation, number_with_trait), proba_heterozygous, 3)
      
     #p.16
     def test_find_protein_motif(self):
-        pass
+        dataset = 'A2Z669,B5ZC00,P07204_TRBM_HUMAN,P20840_SAG1_YEAST'
+        protein_dict = {'B5ZC00': [85, 118, 142, 306, 395], 'P20840_SAG1_YEAST': [79, 109, 135, 248, 306, 348, 364, 402, 485, 501, 614], 'P07204_TRBM_HUMAN': [47, 115, 116, 382, 409]}
+        self.assertEqual(solve.find_protein_motif(dataset), protein_dict)
 
     #p.17
     def test_protein_to_mrna(self):
-        pass
+        sequence = 'MA'
+        num_possible = 12
+        self.assertEqual(solve.protein_to_mrna(sequence), num_possible)
      
     #p. 18
     def test_open_reading_frames(self):
-        pass
+        sequence = 'AGCCATGTAGCTAACTCAGGTTACATGGGGATGACCCCGCGACTTGGATTAGAGTCTCTTTTGGAATAAGCCTGAATGATCCGAGTAGCATCTCAG'
+        possible_proteins = {'MLLGSFRLIPKETLIQVAGSSPCNLS', 'MGMTPRLGLESLLE', 'M', 'MTPRLGLESLLE'}
+        self.assertEqual(solve.open_reading_frames(sequence), possible_proteins)        
 
     #p.19
     def test_n_permutations(self):
-        pass
+        number = 3
+        permutations = (6, [(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)])
+        self.assertEqual(solve.n_permutations(number), permutations)
      
     #p.20
     def test_protein_mass(self):
-        pass
+        sequence = 'SKADYEK'
+        mass = 821.392
+        self.assertAlmostEqual(solve.protein_mass(sequence), mass, 3)
 
     #p.21
     def test_reverse_palindrome(self):
-        pass
-
+        sequence = 'TCAATGCATGCGGGTCTATATGCAT'
+        kmer_list = [(5, 4), (7, 4), (17, 4), (18, 4), (21, 4), (4, 6), (6, 6), (20, 6)]
+        self.assertEqual(solve.reverse_palindrome(sequence), kmer_list)
     #p.22
     def test_rna_splicing(self):
-        pass
+        sequences = '>Rosalind_10ATGGTCTACATAGCTGACAAACAGCACGTAGCAATCGGTCGAATCTCGAGAGGCATATGGTCACATGATCGGTCGAGCGTGTTTCAAAGTTTGCGCCTAG>Rosalind_12ATCGGTCGAA>Rosalind_15ATCGGTCGAGCGTGT'
+        protein = 'MVYIADKQHVASREAYGHMFKVCA'
+        self.assertEqual(solve.rna_splicing(sequences, test=True), protein)
 
     #p.23
     def test_lexicographic_permutations(self):
-        pass
+        alphabet, string_length = 'T A G C', 2
+        permutations = ['AA', 'AC', 'AG', 'AT', 'CA', 'CC', 'CG', 'CT', 'GA', 'GC', 'GG', 'GT', 'TA', 'TC', 'TG', 'TT']
+        self.assertEqual(solve.lexicographic_permutations(alphabet, string_length), permutations)    
 
     #p.24
     def test_longest_subsequence(self):
-        pass
+        number, sequence = 5, '5 1 4 2 3'
+        longest_subsequences1 = (['1', '2', '3'], ['5', '4', '2'])
+        longest_subsequences2 = (['1', '2', '3'], ['5', '4', '3'])
+        result = solve.longest_subsequence(number, sequence)
+        self.assertTrue(result == longest_subsequences1 or result == longest_subsequences2)
 
     #p.25
     def test_shortest_superstring(self):
-        pass
+        sequences = '>Rosalind_56ATTAGACCTG>Rosalind_57CCTGCCGGAA>Rosalind_58AGACCTGCCG>Rosalind_59GCCGGAATAC'
+        superstring = 'ATTAGACCTGCCGGAATAC'
+        self.assertEqual(solve.shortest_superstring(sequences, test=True), superstring)
+        self.assertEqual(solve.shortest_superstring(sequences, brute=False, test=True), superstring)
 
 if __name__ == '__main__':
     unittest.main()
