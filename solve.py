@@ -595,4 +595,16 @@ def shortest_superstring(sequences, brute=True, test=False):
                 break
         return shortest_sequence
 
+def matching_graph(sequence):
+    #p.26 - return number of perfect matchings
+    #in graph of RNA sequence
+    #using closed-form solution provided
+    import math
+    number_A = sequence.count("A")
+    number_G = sequence.count("G")
+    number_matching = math.factorial(number_A) * math.factorial(number_G)
+    return number_matching
+
+
+
 

@@ -159,5 +159,11 @@ class SolveTests(unittest.TestCase):
         self.assertEqual(solve.shortest_superstring(sequences, test=True), superstring)
         self.assertEqual(solve.shortest_superstring(sequences, brute=False, test=True), superstring)
 
+    #p.26
+    def test_matching_graph(self):
+        sequence = 'AGCUAGUCAU'
+        number_matching = 12
+        self.assertEqual(solve.matching_graph(sequence), number_matching)
+
 if __name__ == '__main__':
     unittest.main()
