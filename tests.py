@@ -165,5 +165,11 @@ class SolveTests(unittest.TestCase):
         number_matching = 12
         self.assertEqual(solve.matching_graph(sequence), number_matching)
 
+    #p.27
+    def test_partial_permutations(self):
+        number, subset = 21, 7
+        partial = 51200
+        self.assertEqual(solve.partial_permutations(number, subset), partial)
+        
 if __name__ == '__main__':
     unittest.main()

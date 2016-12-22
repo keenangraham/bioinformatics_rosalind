@@ -605,6 +605,10 @@ def matching_graph(sequence):
     number_matching = math.factorial(number_A) * math.factorial(number_G)
     return number_matching
 
-
-
+def partial_permutations(number, subset):
+    #p.27 - return number of partial permutations
+    #possible from a population of number when
+    #subset is picked, modulo 1000000
+    import math
+    return int((math.factorial(number)/math.factorial(number-subset)) % 1000000)
 
