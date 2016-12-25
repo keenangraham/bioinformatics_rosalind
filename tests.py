@@ -183,8 +183,7 @@ class SolveTests(unittest.TestCase):
         alphabet, string_length = 'T A G C', 2
         permutations = ['AA', 'AC', 'AG', 'AT', 'CA', 'CC', 'CG',
                         'CT', 'GA', 'GC', 'GG', 'GT', 'TA', 'TC', 'TG', 'TT']
-        self.assertEqual(solve.lexicographic_permutations(
-            alphabet, string_length), permutations)
+        self.assertEqual(solve.lexicographic_permutations(alphabet, string_length), permutations)
 
     # p.24
     def test_longest_subsequence(self):
@@ -192,17 +191,14 @@ class SolveTests(unittest.TestCase):
         longest_subsequences1 = (['1', '2', '3'], ['5', '4', '2'])
         longest_subsequences2 = (['1', '2', '3'], ['5', '4', '3'])
         result = solve.longest_subsequence(number, sequence)
-        self.assertTrue(
-            result == longest_subsequences1 or result == longest_subsequences2)
+        self.assertTrue(result == longest_subsequences1 or result == longest_subsequences2)
 
     # p.25
     def test_shortest_superstring(self):
         sequences = '>Rosalind_56ATTAGACCTG>Rosalind_57CCTGCCGGAA>Rosalind_58AGACCTGCCG>Rosalind_59GCCGGAATAC'
         superstring = 'ATTAGACCTGCCGGAATAC'
-        self.assertEqual(solve.shortest_superstring(
-            sequences, test=True), superstring)
-        self.assertEqual(solve.shortest_superstring(
-            sequences, brute=False, test=True), superstring)
+        self.assertEqual(solve.shortest_superstring(sequences, test=True), superstring)
+        self.assertEqual(solve.shortest_superstring(sequences, brute=False, test=True), superstring)
 
     # p.26
     def test_matching_graph(self):
