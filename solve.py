@@ -118,8 +118,7 @@ def proba_dominant_allele(homozygous_dominant, heterozygous, homozygous_recessiv
             return mating_dict
 
     # calculate probability of dominant allele given all combinations of
-    # mating partners:
-    # dominant-dominant, dominant-heterozygous, dominant-recessive
+    # mating partners: dominant-dominant, dominant-heterozygous, dominant-recessive
     # heterozygous-heterozygous, heterozygous-recessive
     # recessive-recessive
 
@@ -637,8 +636,7 @@ def shortest_superstring(sequences, brute=True, test=False):
             return longest_overlap
         count = 0
         while True:
-            longest = longest_overlap(
-                list(itertools.permutations(sequences, 2)))
+            longest = longest_overlap(list(itertools.permutations(sequences, 2)))
             merged_sequence = longest[1].replace(longest[0], longest[2])
             try:
                 sequences.remove(longest[1])
