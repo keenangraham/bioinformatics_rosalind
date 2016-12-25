@@ -1,12 +1,15 @@
-#solve bioinformatics problems on Rosalind (http://rosalind.info/)
-#each function returns an answer to specified question given proper input
+"""
+Solve bioinformatics problems on Rosalind (http://rosalind.info/). Each
+function returns an answer to specified question given proper input.
 
-#note: some minor formatting of the input and output may be required
-#for Rosalind to accept answer as correct
+Note: Some minor formatting of the input and output may be required
+for Rosalind to accept answer as correct.
+"""
+
 
 def nucleotide_count(sequence):
-    #p.1 - return ACGT count separated by spaces
-    #alt. soln.: return sequence.count('A'), sequence.count('C'), etc. 
+    # p.1 - return ACGT count separated by spaces
+    # alt. soln.: return sequence.count('A'), sequence.count('C'), etc.
     seq = sequence.upper()
     seq_dict = {}
     for letter in seq:
@@ -15,32 +18,38 @@ def nucleotide_count(sequence):
         seq_dict[letter] += 1
     return(seq_dict['A'], seq_dict['C'], seq_dict['G'], seq_dict['T'])
 
+
 def dna_to_rna(sequence):
-    #p.2 - convert DNA to RNA by replacing T with U
+    # p.2 - convert DNA to RNA by replacing T with U
     return sequence.replace('T', 'U')
 
+
 def reverse_complement_dna(sequence):
-    #p.3 - output reverse complement DNA
+    # p.3 - output reverse complement DNA
     # A:T, C:G
-    complement_map = {'A':'T', 'C':'G', 'T':'A', 'G':'C'}
+    complement_map = {'A': 'T', 'C': 'G', 'T': 'A', 'G': 'C'}
     return ''.join(list(map(lambda x: complement_map[x], sequence)))[::-1]
 
+
 def fibonacci_rabbits(months, litter_size):
-    #p.4 - output no. of pairs of mature rabbits after given no. of months, litter_size
+    # p.4 - output no. of pairs of mature rabbits after given no. of months,
+    # litter_size
     mature_rabbits = 1
     baby_rabbits = 1
-    for i in range(months+1):
-        if i == 0: 
+    for i in range(months + 1):
+        if i == 0:
             continue
         if i == 1:
             mature_rabbits = mature_rabbits + baby_rabbits
             baby_rabbits = 0
             continue
-        mature_rabbits, baby_rabbits = mature_rabbits+baby_rabbits,mature_rabbits*litter_size
-    return int(mature_rabbits/2)
+        mature_rabbits, baby_rabbits = mature_rabbits + baby_rabbits, mature_rabbits * litter_size
+    return int(mature_rabbits / 2)
+
 
 def find_gc_content(fasta):
-    #p.5 - parses >Rosalind_xxxx FASTA file, returns name and GC percent of sequence with max GC content
+    # p.5 - parses >Rosalind_xxxx FASTA file, returns name and GC percent of
+    # sequence with max GC content
     sequences = fasta.split('>Rosalind_')
     sequences.pop(0)
     sequence_dict = {}
@@ -48,41 +57,49 @@ def find_gc_content(fasta):
         id = seq[:4]
         sequence = seq[4:]
         seq_length = len(sequence)
-        gc_content = ((sequence.count('G') + sequence.count('C'))/seq_length)*100
+        gc_content = ((sequence.count('G') + sequence.count('C')) / seq_length) * 100
         sequence_dict[id] = gc_content
     max_gc = max(sequence_dict, key=sequence_dict.get)
-    return 'Rosalind_{} {}'.format(max_gc, sequence_dict[max_gc]) 
+    return 'Rosalind_{} {}'.format(max_gc, sequence_dict[max_gc])
+
 
 def find_hamming_distance(first_sequence, second_sequence):
-    #p.6 - output Hamming distance between first and second sequence
-    #number of nucleotides that differ
+    # p.6 - output Hamming distance between first and second sequence
+    # number of nucleotides that differ
     score = 0
     for i, y in enumerate(first_sequence):
         if first_sequence[i] != second_sequence[i]:
             score += 1
     return score
 
+
 def proba_dominant_allele(homozygous_dominant, heterozygous, homozygous_recessive):
-    #p.7 - given proportions of population homozygous dominant/recessive and heterozygous
-    #return probability that two random mating partners will produce offspring with dominant allele
+    # p.7 - given proportions of population homozygous dominant/recessive and
+    # heterozygous return probability that two random mating partners will
+    # produce offspring with dominant allele
     population_size = homozygous_dominant + heterozygous + homozygous_recessive
-    default_values = {'dom': homozygous_dominant, 'het': heterozygous, 'rec': homozygous_recessive}
-    
+
+    default_values = {
+        'dom': homozygous_dominant,
+        'het': heterozygous,
+        'rec': homozygous_recessive
+    }
+
     def reset_dict():
         mating_dict = {
-        'population_size': population_size,
-        'dom': default_values['dom'],
-        'het': default_values['het'],
-        'rec': default_values['rec'],
-        'previous_choice': None
+            'population_size': population_size,
+            'dom': default_values['dom'],
+            'het': default_values['het'],
+            'rec': default_values['rec'],
+            'previous_choice': None
         }
         return mating_dict
 
     def update_population_probability(mating_dict):
         population_size = mating_dict['population_size']
-        mating_dict['prob_dom'] = mating_dict['dom']/population_size
-        mating_dict['prob_het'] = mating_dict['het']/population_size
-        mating_dict['prob_rec'] = mating_dict['rec']/population_size
+        mating_dict['prob_dom'] = mating_dict['dom'] / population_size
+        mating_dict['prob_het'] = mating_dict['het'] / population_size
+        mating_dict['prob_rec'] = mating_dict['rec'] / population_size
         return mating_dict
 
     def change_population_size(mating_dict):
@@ -90,7 +107,7 @@ def proba_dominant_allele(homozygous_dominant, heterozygous, homozygous_recessiv
         mating_dict['population_size'] -= 1
         mating_dict[removed_individual] -= 1
         return mating_dict
-        
+
     def calc_mating_probability(mating_dict):
         if mating_dict['previous_choice'] is None:
             mating_dict = update_population_probability(mating_dict)
@@ -100,10 +117,11 @@ def proba_dominant_allele(homozygous_dominant, heterozygous, homozygous_recessiv
             mating_dict = update_population_probability(new_mating_dict)
             return mating_dict
 
-    #calculate probability of dominant allele given all combinations of mating partners
-    #dominant-dominant, dominant-heterozygous, dominant-recessive
-    #heterozygous-heterozygous, heterozygous-recessive
-    #recessive-recessive
+    # calculate probability of dominant allele given all combinations of
+    # mating partners:
+    # dominant-dominant, dominant-heterozygous, dominant-recessive
+    # heterozygous-heterozygous, heterozygous-recessive
+    # recessive-recessive
 
     dom_allele_map = {
         'dom_dom': 1.0,
@@ -115,52 +133,54 @@ def proba_dominant_allele(homozygous_dominant, heterozygous, homozygous_recessiv
         'rec_het': 0.5,
         'rec_rec': 0,
         'rec_dom': 1.0
-       }
+    }
 
-    #calculate probability of every combination of mating partners
-    #dom-dom, dom-het, dom-rec
-    #het-dom, het-het, het-rec
-    #rec-dom, rec-het, rec-rec
+    # calculate probability of every combination of mating partners
+    # dom-dom, dom-het, dom-rec
+    # het-dom, het-het, het-rec
+    # rec-dom, rec-het, rec-rec
     choice_list = ['dom', 'het', 'rec']
     proba_dict = {}
     for first_choice in choice_list:
-       mating_dict = reset_dict()
-       mating_dict = calc_mating_probability(mating_dict)
-       first_proba = mating_dict['prob_'+first_choice]
-       mating_dict['previous_choice'] = first_choice
-       mating_dict = calc_mating_probability(mating_dict)
-       for second_choice in choice_list:
-           second_proba = mating_dict['prob_'+second_choice]
-           proba_dict[first_choice + '_' + second_choice] = first_proba * second_proba
-           #print(first_choice, first_proba, second_choice, second_proba)
+        mating_dict = reset_dict()
+        mating_dict = calc_mating_probability(mating_dict)
+        first_proba = mating_dict['prob_' + first_choice]
+        mating_dict['previous_choice'] = first_choice
+        mating_dict = calc_mating_probability(mating_dict)
+        for second_choice in choice_list:
+            second_proba = mating_dict['prob_' + second_choice]
+            proba_dict[first_choice + '_' + second_choice] = first_proba * second_proba
     sum = 0
     for key in proba_dict.keys():
-        sum = sum + (proba_dict[key]*dom_allele_map[key])
+        sum = sum + (proba_dict[key] * dom_allele_map[key])
     return sum
 
+
 def rna_to_protein(sequence):
-    #p.8 - return protein sequence given DNA
-    #generate codon table (borrowed code)
+    # p.8 - return protein sequence given DNA
+    # generate codon table (borrowed code)
     bases = ['U', 'C', 'A', 'G']
-    codons = [a+b+c for a in bases for b in bases for c in bases]
+    codons = [a + b + c for a in bases for b in bases for c in bases]
     amino_acids = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
     codon_table = dict(zip(codons, amino_acids))
-    rna_chunked = [sequence[i:i+3] for i in range(0, len(sequence), 3)]
+    rna_chunked = [sequence[i:i + 3] for i in range(0, len(sequence), 3)]
     protein = "".join(list(map(lambda x: codon_table[x], rna_chunked)))
     return protein.replace("*", "")
- 
+
+
 def find_motif(sequence, motif):
-    #p.9 - find index of motif given sequence
-    #alt. soln. if sequence[i:].startswith(motif)
+    # p.9 - find index of motif given sequence
+    # alt. soln. if sequence[i:].startswith(motif)
     motif_length = len(motif)
     index_list = []
     for i, y in enumerate(sequence):
-        if sequence[i:i+motif_length] == motif:
-            index_list.append(i+1)
+        if sequence[i:i + motif_length] == motif:
+            index_list.append(i + 1)
     return index_list
- 
+
+
 def find_profile(sequences, test=False):
-    #p.10 - return profile and consensus string given many sequences
+    # p.10 - return profile and consensus string given many sequences
     import numpy as np
     parse_length = 1 if test else 4
     sequence_list = sequences.split('>Rosalind_')
@@ -171,12 +191,11 @@ def find_profile(sequences, test=False):
     profile_list = ['A', 'C', 'G', 'T']
     consensus_seq = ''
     for i in range(sequence_length):
-        unique, counts = np.unique(sequence_list[:,i], return_counts=True)
+        unique, counts = np.unique(sequence_list[:, i], return_counts=True)
         count_dict = dict(zip(unique, counts))
         seq_dict[i] = count_dict
         max_key = max(count_dict, key=count_dict.get)
         consensus_seq = consensus_seq + max_key
-
     profile_dict = {}
     for letter in profile_list:
         letter_row = []
@@ -188,34 +207,36 @@ def find_profile(sequences, test=False):
         profile_dict[letter] = ' '.join(str(x) for x in letter_row)
     return (consensus_seq, profile_dict)
 
+
 def fibonacci(max_value):
-    #example of Fibonacci sequence using yield statement
+    # example of Fibonacci sequence using yield statement
     def fibonacci_generator(max_value):
         a, b = 0, 1
         i = 0
         while i < max_value:
             yield b
-            a, b = b, a+b
+            a, b = b, a + b
             i += 1
     print(*fibonacci_generator(max_value), sep='\n')
 
+
 def mortal_rabbits(months, life_span):
-    #p.11 - return number of rabbits after given number of months
-    #and given lifespan
+    # p.11 - return number of rabbits after given number of months
+    # and given lifespan
     life_span -= 1
     baby_rabbit_pairs = 1
     mature_rabbit_pairs = 0
-    baby_rabbit_list = [] 
-    for i in range(months-1):
+    baby_rabbit_list = []
+    for i in range(months - 1):
         baby_rabbit_list.append(baby_rabbit_pairs)
-        baby_rabbit_pairs, mature_rabbit_pairs = mature_rabbit_pairs,\
-            mature_rabbit_pairs + baby_rabbit_pairs\
-            - (baby_rabbit_list[i-life_span] if i >= life_span else 0)
+        baby_rabbit_pairs, mature_rabbit_pairs = mature_rabbit_pairs, mature_rabbit_pairs + \
+            baby_rabbit_pairs - (baby_rabbit_list[i - life_span] if i >= life_span else 0)
     return baby_rabbit_pairs + mature_rabbit_pairs
 
+
 def overlap_graphs(sequences):
-    #p.12 - return list of sequences where last three letters of string one
-    #match first three letters of string two
+    # p.12 - return list of sequences where last three letters of string one
+    # match first three letters of string two
     overlaps = []
     sequences = sequences.split(">Rosalind_")
     sequences = [seq for seq in sequences if seq != '']
@@ -226,25 +247,27 @@ def overlap_graphs(sequences):
             if seq_id_one != seq_id_two:
                 if seq_one[4:].startswith(seq_two[-3:]):
                     overlaps.append("Rosalind_{} Rosalind_{}".format(seq_id_two, seq_id_one))
-    return overlaps                
+    return overlaps
+
 
 def expected_offspring(genotype_population):
-    #p.13 - return expected number of offspring with dominant allele
-    #given number of mating couples with certain alleles
-    #AA-AA, AA-Aa, AA-aa, Aa-Aa, Aa-aa, aa-aa
-    
-    #hardcode probability of dominant allele given mating couples
+    # p.13 - return expected number of offspring with dominant allele
+    # given number of mating couples with certain alleles
+    # AA-AA, AA-Aa, AA-aa, Aa-Aa, Aa-aa, aa-aa
+
+    # hardcode probability of dominant allele given mating couples
     dominant_probability = [1, 1, 1, 0.75, 0.5, 0]
     genotype_population = [int(gen) for gen in genotype_population.split()]
     zip_proba_genotype = zip(dominant_probability, genotype_population)
     expected_value = 0
     for z in zip_proba_genotype:
         a, b = z
-        expected_value = expected_value + 2*(a*b)
+        expected_value = expected_value + 2 * (a * b)
     return expected_value
 
+
 def shared_motif(sequences, test=False):
-    #p.14 - return longest shared motif contained in all sequences
+    # p.14 - return longest shared motif contained in all sequences
     parse_length = 1 if test else 4
     sequences = sequences.split(">Rosalind_")
     sequences = [seq[parse_length:] for seq in sequences if seq != '']
@@ -254,9 +277,9 @@ def shared_motif(sequences, test=False):
         motif_length = 1
         all_contain_motif = True
         while all_contain_motif:
-            #could instead start with longest sequence and shorten
-            #for more efficiency
-            motif = sequences[0][index:index+motif_length]
+            # could instead start with longest sequence and shorten
+            # for more efficiency
+            motif = sequences[0][index:index + motif_length]
             for seq in sequences:
                 if motif not in seq:
                     all_contain_motif = False
@@ -269,34 +292,38 @@ def shared_motif(sequences, test=False):
                     break
     return longest_motif
 
+
 def calc_proba_heterozygous(generation, number_with_trait):
-    #p.15 - return probability of seeing number_with_trait individuals
-    #heterozygous for two independent traits in specified generation
-    #assuming each descendant mates with a heterozygous individual
-    #and has two offspring
- 
-    #key insight: any individual mating with a heterozygous individual
-    #will have 1/4 chance of offspring with heterozygous alleles
-    #probability of no heterozygous for each descendant is 1-(1/4)
-    
-    #when k = 2, n= 1: 1 - ((0.75**2)**((2**k)*(1/2)))
-    #alt. soln. - use scipy.stats.binom.pmf(n, k, p=0.25) for n in range(n, 2**k)
-    #alt. soln. 2:  1 - scipy.stats.binom.cdf(n-1, 2**k, 0.25)
+    # p.15 - return probability of seeing number_with_trait individuals
+    # heterozygous for two independent traits in specified generation
+    # assuming each descendant mates with a heterozygous individual
+    # and has two offspring
+
+    # key insight: any individual mating with a heterozygous individual
+    # will have 1/4 chance of offspring with heterozygous alleles
+    # probability of no heterozygous for each descendant is 1-(1/4)
+
+    # when k = 2, n= 1: 1 - ((0.75**2)**((2**k)*(1/2)))
+    # alt. soln. - use scipy.stats.binom.pmf(n, k, p=0.25) for n in range(n, 2**k)
+    # alt. soln. 2:  1 - scipy.stats.binom.cdf(n-1, 2**k, 0.25)
     import math
     proba_heterozygous = 0
-    for num in range(number_with_trait, (2**generation)+1):
+    for num in range(number_with_trait, (2**generation) + 1):
         number_offspring = 2**generation
-        number_no_trait = number_offspring-num
-        number_of_combinations = math.factorial(number_offspring)/(math.factorial(num)*(math.factorial((number_no_trait))))
-        proba_of_number_with_trait = (3/4)**(number_no_trait) * (1/4)**(num)
-        proba_heterozygous = proba_heterozygous + (proba_of_number_with_trait * number_of_combinations)
+        number_no_trait = number_offspring - num
+        number_of_combinations = math.factorial(
+            number_offspring) / (math.factorial(num) * (math.factorial((number_no_trait))))
+        proba_of_number_with_trait = (3 / 4)**(number_no_trait) * (1 / 4)**(num)
+        proba_heterozygous = proba_heterozygous + \
+            (proba_of_number_with_trait * number_of_combinations)
     return proba_heterozygous
- 
+
+
 def find_protein_motif(dataset):
-    #p.16 - return proteins in given dataset with
-    #N-glycosylation motif: N{P}[ST]{P}
-    
-    #pull sequences from UniProt
+    # p.16 - return proteins in given dataset with
+    # N-glycosylation motif: N{P}[ST]{P}
+
+    # pull sequences from UniProt
     import regex as re
     import requests
     ids = [i for i in dataset.split(',')]
@@ -312,51 +339,59 @@ def find_protein_motif(dataset):
     protein_dict = {key: value for key, value in protein_dict.items() if value}
     return protein_dict
 
-def protein_to_mrna(sequence):
-    #p.17 - return number of possible mRNA sequences that
-    #would produce given protein string, modulo 1,000,000
 
-    #generate codon table (borrowed code)
+def protein_to_mrna(sequence):
+    # p.17 - return number of possible mRNA sequences that
+    # would produce given protein string, modulo 1,000,000
+
+    # generate codon table (borrowed code)
     bases = ['U', 'C', 'A', 'G']
-    codons = [a+b+c for a in bases for b in bases for c in bases]
+    codons = [a + b + c for a in bases for b in bases for c in bases]
     amino_acids = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
     codon_table = dict(zip(codons, amino_acids))
     possible_sequences = 1
-    for seq in sequence: 
+    for seq in sequence:
         possible_sequences *= len([i for i in codon_table.values() if i == seq])
-    #multiply by three because three possible stop codons
+    # multiply by three because three possible stop codons
     return (3 * possible_sequences) % 1000000
- 
+
+
 def open_reading_frames(sequence):
-    #p. 17 - given DNA sequence return all possible proteins
-    #made from open reading frames of strand and
-    #reverse strand
+    # p. 17 - given DNA sequence return all possible proteins
+    # made from open reading frames of strand and
+    # reverse strand
     import regex as re
+
     def dna_to_rna(sequence):
         return sequence.replace('T', 'U')
+
     def reverse_complement_dna(sequence):
-        complement_map = {'A':'U', 'C':'G', 'U':'A', 'G':'C'}
+        complement_map = {'A': 'U', 'C': 'G', 'U': 'A', 'G': 'C'}
         return ('').join(list(map(lambda x: complement_map[x], sequence)))[::-1]
+
     def rna_to_protein(sequence):
         bases = ['U', 'C', 'A', 'G']
-        codons = [a+b+c for a in bases for b in bases for c in bases]
+        codons = [a + b + c for a in bases for b in bases for c in bases]
         amino_acids = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
         codon_table = dict(zip(codons, amino_acids))
-        rna_chunked = [sequence[i:i+3] for i in range(0, len(sequence), 3)]
+        rna_chunked = [sequence[i:i + 3] for i in range(0, len(sequence), 3)]
         protein = "".join(list(map(lambda x: codon_table[x], rna_chunked)))
         return protein
+
     def reading_frame(sequence):
         seq = ''
-        for codon in [sequence[i:i+3] for i in range(0, len(sequence), 3)]:
+        for codon in [sequence[i:i + 3] for i in range(0, len(sequence), 3)]:
             if codon in ["UAA", "UAG", "UGA"]:
                 seq += codon
                 return seq
             else:
                 seq += codon
         return 0
+
     def start_index(sequence):
         pattern = re.compile('AUG')
         return [index.start() for index in pattern.finditer(sequence, overlapped=True)]
+
     def valid_sequences(sequence, start_index):
         seq_list = []
         for i in start_index:
@@ -365,7 +400,6 @@ def open_reading_frames(sequence):
                 seq_list.append(rna_to_protein(seq).replace('*', ''))
         return seq_list
 
-    pattern = re.compile('AUG')
     sequence = dna_to_rna(sequence)
     sequence_reverse = reverse_complement_dna(sequence)
     start_forward = start_index(sequence)
@@ -374,76 +408,82 @@ def open_reading_frames(sequence):
     reverse_seqs = valid_sequences(sequence_reverse, start_reverse)
     return set(forward_seqs + reverse_seqs)
 
-def n_permutations(number):
-    #p.19 - return number of possible
-    #permutations from 1...number
-    #as well as a list of all of the permutations
-    import itertools
-    permutations = list(itertools.permutations([i for i in range(1, number+1)]))
-    return (len(permutations), permutations)
- 
-def protein_mass(sequence):
-    #p.20 - return monoisotopic mass of protein
 
-    #monoisotopic mass table
+def n_permutations(number):
+    # p.19 - return number of possible
+    # permutations from 1...number
+    # as well as a list of all of the permutations
+    import itertools
+    permutations = list(itertools.permutations([i for i in range(1, number + 1)]))
+    return (len(permutations), permutations)
+
+
+def protein_mass(sequence):
+    # p.20 - return monoisotopic mass of protein
+
+    # monoisotopic mass table
     mass_table = {
-        "A":71.03711,
-        "C":103.00919,
-        "D":115.02694,
-        "E":129.04259,
-        "F":147.06841,
-        "G":57.02146,
-        "H":137.05891,
-        "I":113.08406,
-        "K":128.09496,
-        "L":113.08406,
-        "M":131.04049,
-        "N":114.04293,
-        "P":97.05276,
-        "Q":128.05858,
-        "R":156.10111,
-        "S":87.03203,
-        "T":101.04768,
-        "V":99.06841,
-        "W":186.07931,
-        "Y":163.06333
-        }
+        "A": 71.03711,
+        "C": 103.00919,
+        "D": 115.02694,
+        "E": 129.04259,
+        "F": 147.06841,
+        "G": 57.02146,
+        "H": 137.05891,
+        "I": 113.08406,
+        "K": 128.09496,
+        "L": 113.08406,
+        "M": 131.04049,
+        "N": 114.04293,
+        "P": 97.05276,
+        "Q": 128.05858,
+        "R": 156.10111,
+        "S": 87.03203,
+        "T": 101.04768,
+        "V": 99.06841,
+        "W": 186.07931,
+        "Y": 163.06333
+    }
     mass = 0
     for letter in sequence:
         mass += mass_table[letter]
     return mass
- 
+
+
 def reverse_palindrome(sequence):
-    #p.20 - print position and length of every
-    #palindrome with length between 4 and 12
+    # p.20 - print position and length of every
+    # palindrome with length between 4 and 12
     def reverse_complement_dna(sequence):
-        complement_map = {'A':'T', 'C':'G', 'T':'A', 'G':'C'}
+        complement_map = {'A': 'T', 'C': 'G', 'T': 'A', 'G': 'C'}
         return ''.join(list(map(lambda x: complement_map[x], sequence)))[::-1]
     kmer_dict = {}
     kmer_list = []
     counter = 0
-    for length in range(4,13):
+    for length in range(4, 13):
         for index, letter in enumerate(sequence):
             seq = sequence[index:index + length]
             if len(seq) == length:
-                kmer_dict[counter] = {"seq":seq, "position":index+1, "length":length, "rc":reverse_complement_dna(seq)}
+                kmer_dict[counter] = {"seq": seq, "position": index + 1,
+                                      "length": length, "rc": reverse_complement_dna(seq)}
                 counter += 1
     for key, value in kmer_dict.items():
         if value['seq'] == value["rc"]:
             kmer_list.append((value["position"], value["length"]))
     return kmer_list
 
+
 def rna_splicing(sequences, test=False):
-    #p.22 - return protein string resulting from DNA sequence after
-    #introns (substrings provided) have been removed
+    # p.22 - return protein string resulting from DNA sequence after
+    # introns (substrings provided) have been removed
     def dna_to_rna(sequence):
         return sequence.replace('T', 'U')
+
     def rna_to_protein(sequence):
         bases = ['U', 'C', 'A', 'G']
-        codons = [a+b+c for a in bases for b in bases for c in bases]
+        codons = [a + b + c for a in bases for b in bases for c in bases]
         amino_acids = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
         codon_table = dict(zip(codons, amino_acids))
-        rna_chunked = [sequence[i:i+3] for i in range(0, len(sequence), 3)]
+        rna_chunked = [sequence[i:i + 3] for i in range(0, len(sequence), 3)]
         protein = "".join(list(map(lambda x: codon_table[x], rna_chunked)))
         return protein
     parse_length = 2 if test else 4
@@ -453,32 +493,35 @@ def rna_splicing(sequences, test=False):
         seq = seq.replace(intron, '')
     return rna_to_protein(dna_to_rna(seq)).replace('*', '')
 
+
 def lexicographic_permutations(alphabet, string_length):
-    #p.23 - print sorted list of every permutation of
-    #length string_length given symbols in alphabet
-    #alt. soln. - itertools.product(alphabet, repeat=string_length)
+    # p.23 - print sorted list of every permutation of
+    # length string_length given symbols in alphabet
+    # alt. soln. - itertools.product(alphabet, repeat=string_length)
     import itertools
     alphabet = [x for x in alphabet.split(' ')]
-    permutations = [''.join(vals) for vals in list(itertools.permutations(string_length*alphabet, string_length))]
+    permutations = [''.join(vals) for vals in list(
+        itertools.permutations(string_length * alphabet, string_length))]
     return sorted(set(permutations))
 
+
 def longest_subsequence(number, sequence):
-    #p.24 - print longest increasing subsequence followed
-    #by longest decreasing subsequence given permutation of 
-    #number-element list, e.g. (8, 2, 1, 6, 5, 7, 4, 3, 9)
-    #returns (2, 6, 7, 9) and (8, 6, 5, 4, 3)
-    #alt. soln - keep tuples of len and sequence for number in array;
-    #for each number in the sequence find the longest subsquence
-    #that ends with a number less than the current number,
-    #add number to end of the sequence, increment length: 
-    #sub_array = [(0),[])]*(number+1)
-    #for number in sequence:
+    # p.24 - print longest increasing subsequence followed
+    # by longest decreasing subsequence given permutation of
+    # number-element list, e.g. (8, 2, 1, 6, 5, 7, 4, 3, 9)
+    # returns (2, 6, 7, 9) and (8, 6, 5, 4, 3)
+    # alt. soln - keep tuples of len and sequence for number in array;
+    # for each number in the sequence find the longest subsquence
+    # that ends with a number less than the current number,
+    # add number to end of the sequence, increment length:
+    # sub_array = [(0),[])]*(number+1)
+    # for number in sequence:
     #    length, subsequence = max(sub_array[:number])
     #    sub_array[number] = (length+1, subsequence+[number])
-    #alt. soln #2 (fastest) - use Patience sorting, recover
-    #longeset subsequence by keeping track of len of previous
-    #pile when card is added to new pile, follow pointers
-    #back starting with last pile
+    # alt. soln #2 (fastest) - use Patience sorting, recover
+    # longeset subsequence by keeping track of len of previous
+    # pile when card is added to new pile, follow pointers
+    # back starting with last pile
     def possible_routes(sequence, descending=True):
         if descending:
             sequence = sequence[::-1]
@@ -488,10 +531,11 @@ def longest_subsequence(number, sequence):
             for destination in sequence[index:]:
                 if destination > num:
                     possible_destinations.append(destination)
-            if not possible_destinations: 
+            if not possible_destinations:
                 possible_destinations = [0]
             route_dict[num] = possible_destinations
         return route_dict
+
     def routes_to_distances(route_dict):
         max_value_dict = {}
         for key, value in sorted(route_dict.items(), reverse=True):
@@ -510,15 +554,18 @@ def longest_subsequence(number, sequence):
             if distance:
                 distances_dict[key] = distance
         return distances_dict
+
     def recreate_path(route_dict, distances_raw, lowest_start, descending=True):
         zipped_dict = {}
         for key, values in route_dict.items():
-            zipped_dict[key] = {distance: destination for distance, destination in zip(distances_raw[key],route_dict[key])}
+            zipped_dict[key] = {distance: destination for distance,
+                                destination in zip(distances_raw[key], route_dict[key])}
         longest_route = [lowest_start]
         destination = zipped_dict[lowest_start][max(zipped_dict[lowest_start])]
         while destination != 0:
             longest_route.append(destination)
-            destination = zipped_dict[destination][max(zipped_dict[destination])]
+            destination = zipped_dict[destination][
+                max(zipped_dict[destination])]
         if descending:
             return longest_route[::-1]
         else:
@@ -528,21 +575,24 @@ def longest_subsequence(number, sequence):
     asc_distances_raw = routes_to_distances(asc_route_dict)
     asc_distances_max = {key: max(values) for key, values in asc_distances_raw.items()}
     asc_lowest_start = max(asc_distances_max, key=asc_distances_max.get)
-    
+
     desc_route_dict = possible_routes(sequence)
     desc_distances_raw = routes_to_distances(desc_route_dict)
     desc_distances_max = {key: max(values) for key, values in desc_distances_raw.items()}
     desc_lowest_start = max(desc_distances_max, key=desc_distances_max.get)
-    
-    return ((recreate_path(asc_route_dict, asc_distances_raw, asc_lowest_start, descending=False), (recreate_path(desc_route_dict, desc_distances_raw, desc_lowest_start))))
+
+    return ((recreate_path(asc_route_dict, asc_distances_raw, asc_lowest_start, descending=False),
+             (recreate_path(desc_route_dict, desc_distances_raw, desc_lowest_start))))
+
 
 def shortest_superstring(sequences, brute=True, test=False):
-    #p.25 - print shortest superstring that
-    #contains every subsequence in sequences
+    # p.25 - print shortest superstring that
+    # contains every subsequence in sequences
     import itertools
     parse_length = 2 if test else 4
-    sequences = [seq[parse_length:] for seq in sequences.split('>Rosalind_') if seq != '']
-    #using brute force method
+    sequences = [seq[parse_length:]
+                 for seq in sequences.split('>Rosalind_') if seq != '']
+    # using brute force method
     if brute:
         best_sequence = "".join(sequences)
         for perm in itertools.permutations(sequences):
@@ -557,13 +607,14 @@ def shortest_superstring(sequences, brute=True, test=False):
                     else:
                         continue
                 if longest_start:
-                    shortest_sequence = seq.replace(longest_start, shortest_sequence)
+                    shortest_sequence = seq.replace(
+                        longest_start, shortest_sequence)
                 else:
                     shortest_sequence = shortest_sequence + seq
             if len(shortest_sequence) < len(best_sequence):
                 best_sequence = shortest_sequence
         return best_sequence
-    #using greedy method
+    # using greedy method
     else:
         def longest_overlap(sequences_permutations):
             longest_overlap = ("", "", "")
@@ -571,15 +622,18 @@ def shortest_superstring(sequences, brute=True, test=False):
                 for length in range(len(seq_two) - 1, -1, -1):
                     if seq_one.endswith(seq_two[:length]):
                         if len(seq_two[:length]) > len(longest_overlap[0]):
-                            longest_overlap = (seq_two[:length], seq_one, seq_two)
+                            longest_overlap = (
+                                seq_two[:length], seq_one, seq_two)
                 for length in range(len(seq_one) - 1, -1, -1):
                     if seq_two.endswith(seq_one[:length]):
                         if len(seq_one[:length]) > len(longest_overlap[0]):
-                            longest_overlap = (seq_one[:length], seq_two, seq_one)
+                            longest_overlap = (
+                                seq_one[:length], seq_two, seq_one)
             return longest_overlap
         count = 0
         while True:
-            longest = longest_overlap(list(itertools.permutations(sequences, 2)))
+            longest = longest_overlap(
+                list(itertools.permutations(sequences, 2)))
             merged_sequence = longest[1].replace(longest[0], longest[2])
             try:
                 sequences.remove(longest[1])
@@ -595,20 +649,21 @@ def shortest_superstring(sequences, brute=True, test=False):
                 break
         return shortest_sequence
 
+
 def matching_graph(sequence):
-    #p.26 - return number of perfect matchings
-    #in graph of RNA sequence
-    #using closed-form solution provided
+    # p.26 - return number of perfect matchings
+    # in graph of RNA sequence
+    # using closed-form solution provided
     import math
-    number_A = sequence.count("A")
-    number_G = sequence.count("G")
-    number_matching = math.factorial(number_A) * math.factorial(number_G)
+    number_a = sequence.count("A")
+    number_g = sequence.count("G")
+    number_matching = math.factorial(number_a) * math.factorial(number_g)
     return number_matching
 
-def partial_permutations(number, subset):
-    #p.27 - return number of partial permutations
-    #possible from a population of number when
-    #subset is picked, modulo 1000000
-    import math
-    return int((math.factorial(number)/math.factorial(number-subset)) % 1000000)
 
+def partial_permutations(number, subset):
+    # p.27 - return number of partial permutations
+    # possible from a population of number when
+    # subset is picked, modulo 1000000
+    import math
+    return int((math.factorial(number) / math.factorial(number - subset)) % 1000000)
