@@ -3,7 +3,7 @@ Solve bioinformatics problems on Rosalind (http://rosalind.info/). Each
 function returns an answer to specified question given proper input.
 
 Note: Some minor formatting of the input and output may be required
-for Rosalind to accept answer as correct.
+for Rosalind to accept the answer as correct.
 """
 
 
@@ -64,7 +64,7 @@ def find_gc_content(fasta):
 
 
 def find_hamming_distance(first_sequence, second_sequence):
-    # p.6 - output Hamming distance between first and second sequence
+    # p.6 - return Hamming distance between first and second sequence
     # number of nucleotides that differ
     score = 0
     for i, y in enumerate(first_sequence):
@@ -463,8 +463,12 @@ def reverse_palindrome(sequence):
         for index, letter in enumerate(sequence):
             seq = sequence[index:index + length]
             if len(seq) == length:
-                kmer_dict[counter] = {"seq": seq, "position": index + 1,
-                                      "length": length, "rc": reverse_complement_dna(seq)}
+                kmer_dict[counter] = {
+                    "seq": seq,
+                    "position": index + 1,
+                    "length": length,
+                    "rc": reverse_complement_dna(seq)
+                }
                 counter += 1
     for key, value in kmer_dict.items():
         if value['seq'] == value["rc"]:
@@ -486,6 +490,7 @@ def rna_splicing(sequences, test=False):
         rna_chunked = [sequence[i:i + 3] for i in range(0, len(sequence), 3)]
         protein = "".join(list(map(lambda x: codon_table[x], rna_chunked)))
         return protein
+
     parse_length = 2 if test else 4
     sequences = [seq[parse_length:] for seq in sequences.split(">Rosalind_") if seq != '']
     seq = sequences[0]
