@@ -212,6 +212,12 @@ class SolveTests(unittest.TestCase):
         partial = 51200
         self.assertEqual(solve.partial_permutations(number, subset), partial)
 
+    # p.28
+    def test_sequence_proba(self):
+        sequence, gc_content = 'ACGATACAA', '0.129 0.287 0.423 0.476 0.641 0.742 0.783'
+        log_proba = [-5.737, -5.217, -5.263, -5.36, -5.958, -6.628, -7.009]
+        self.assertEqual(solve.sequence_proba(sequence, gc_content), log_proba)
+
 
 if __name__ == '__main__':
     unittest.main()
