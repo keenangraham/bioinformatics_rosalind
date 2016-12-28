@@ -670,3 +670,26 @@ def partial_permutations(number, subset):
     # subset is picked, modulo 1000000
     import math
     return int((math.factorial(number) / math.factorial(number - subset)) % 1000000)
+
+
+def sequence_proba(sequence, gc_content):
+    # p.28 - return log probability of given sequence
+    # when the gc_content is specified
+    import numpy as np
+    gc_content = gc_content.split(" ")
+    log_proba = []
+    for ratio in gc_content:
+        gc_frequency = float(ratio) / 2
+        at_frequency = (1 - float(ratio)) / 2
+        gcta_freq_map = {
+            'G': gc_frequency,
+            'C': gc_frequency,
+            'A': at_frequency,
+            'T': at_frequency
+        }
+        seq_proba = 1
+        for letter in sequence:
+            seq_proba *= gcta_freq_map[letter]
+        log_proba.append(float(round(np.log10(seq_proba), 3)))
+    return log_proba
+
