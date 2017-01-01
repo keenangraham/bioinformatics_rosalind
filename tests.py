@@ -224,6 +224,12 @@ class SolveTests(unittest.TestCase):
         perm_list = (8, [[-1, 2], [-2, 1], [1, -2], [2, -1], [1, 2], [2, 1], [-1, -2], [-2, -1]])
         self.assertEqual(solve.signed_permutations(number), perm_list)
 
+    # p.30
+    def test_subsequence_indices(self):
+        sequences = '>Rosalind_14ACGTACGTGACG>Rosalind_18GTA'
+        indices = [3, 4, 5]
+        self.assertEqual(solve.subsequence_indices(sequences, test=True), indices)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -16,7 +16,7 @@ def nucleotide_count(sequence):
         if letter not in seq_dict.keys():
             seq_dict[letter] = 0
         seq_dict[letter] += 1
-    return(seq_dict['A'], seq_dict['C'], seq_dict['G'], seq_dict['T'])
+    return (seq_dict['A'], seq_dict['C'], seq_dict['G'], seq_dict['T'])
 
 
 def dna_to_rna(sequence):
@@ -708,3 +708,21 @@ def signed_permutations(number):
             num_perm_zip = list(zip(sign, num))
             perm_list.append(list(map(lambda x: x[0] * x[1], num_perm_zip)))
     return (len(perm_list), perm_list)
+
+
+def subsequence_indices(sequences, test=False):
+    # p.30 - return indices of a possible subsequence
+    # given a sequence
+    parse_length = 2 if test else 4
+    seqs = [seq[parse_length:] for seq in sequences.split(">Rosalind_") if seq != '']
+    sequence, subsequence = seqs[0], seqs[1]
+    min_index = 0
+    indices = []
+    for letter in subsequence:
+        try:
+            index = sequence[min_index:].index(letter) + min_index
+            min_index = index + 1
+            indices.append(index)
+        except:
+            return "No subsequence"
+    return list(map(lambda x: x + 1, indices))
