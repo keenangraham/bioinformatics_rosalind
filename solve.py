@@ -693,3 +693,18 @@ def sequence_proba(sequence, gc_content):
         log_proba.append(float(round(np.log10(seq_proba), 3)))
     return log_proba
 
+
+def signed_permutations(number):
+    # p.29 - return every possible signed permutation
+    # from 1...number, and the total number
+    import itertools
+    numbers = [i for i in range(1, number + 1)]
+    number_perms = list(itertools.permutations(numbers))
+    signs = [-1 for i in range(number)] + [1 for i in range(number)]
+    sign_perms = list(set(itertools.permutations(signs, number)))
+    perm_list = []
+    for sign in sign_perms:
+        for num in number_perms:
+            num_perm_zip = list(zip(sign, num))
+            perm_list.append(list(map(lambda x: x[0] * x[1], num_perm_zip)))
+    return (len(perm_list), perm_list)

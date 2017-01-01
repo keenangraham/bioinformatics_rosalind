@@ -218,6 +218,12 @@ class SolveTests(unittest.TestCase):
         log_proba = [-5.737, -5.217, -5.263, -5.36, -5.958, -6.628, -7.009]
         self.assertEqual(solve.sequence_proba(sequence, gc_content), log_proba)
 
+    # p.29
+    def test_signed_permutations(self):
+        number = 2
+        perm_list = (8, [[-1, 2], [-2, 1], [1, -2], [2, -1], [1, 2], [2, 1], [-1, -2], [-2, -1]])
+        self.assertEqual(solve.signed_permutations(number), perm_list)
+
 
 if __name__ == '__main__':
     unittest.main()
