@@ -230,6 +230,12 @@ class SolveTests(unittest.TestCase):
         indices = [3, 4, 5]
         self.assertEqual(solve.subsequence_indices(sequences, test=True), indices)
 
+    # p.31
+    def test_transversion_ratio(self):
+        sequences = '>Rosalind_0209GCAACGCACAACGAAAACCCTTAGGGACTGGATTATTTCGTGATCGTTGTAGTTATTGGAAGTACGGGCATCAACCCAGTT>Rosalind_2200TTATCTGACAAAGAAAGCCGTCAACGGCTGGATAATTTCGCGATCGTGCTGGTTACTGGCGGTACGAGTGTTCCTTTGGGT'
+        ratio = 1.21428571429
+        self.assertEqual(solve.transversion_ratio(sequences), ratio)
+
 
 if __name__ == '__main__':
     unittest.main()

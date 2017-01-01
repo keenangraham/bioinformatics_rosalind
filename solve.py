@@ -726,3 +726,24 @@ def subsequence_indices(sequences, test=False):
         except:
             return "No subsequence"
     return list(map(lambda x: x + 1, indices))
+
+
+def transversion_ratio(sequences):
+    # p.31 - return ratio of base transitions
+    # to transversions
+    seqs = [seq[4:] for seq in sequences.split(">Rosalind_") if seq != '']
+    transversion_dict = {
+        "A": "CT",
+        "G": "CT",
+        "C": "AG",
+        "T": "AG"
+    }
+    transitions, transversions = 0, 0
+    for index, letter in enumerate(seqs[0]):
+        if letter == seqs[1][index]:
+            continue
+        if seqs[1][index] in transversion_dict[letter]:
+            transversions += 1
+        else:
+            transitions += 1
+    return round(transitions / transversions, 11)
