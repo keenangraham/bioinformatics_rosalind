@@ -747,3 +747,16 @@ def transversion_ratio(sequences):
         else:
             transitions += 1
     return round(transitions / transversions, 11)
+
+def edges_needed_for_tree(number, adjacency_list):
+    # p.32 - return number of extra edges needed
+    # to create a tree given an adjacency_list of
+    # connected nodes and the number of nodes
+    # key insight: tree of order number must have
+    # (number - 1) edges; find number of edges in
+    # adjacency list and subtract from (number - 1)
+    edges_total = number - 1
+    adjacency_list = adjacency_list.split(",")
+    edges_in_adjacency_list = len(adjacency_list)
+    return edges_total - edges_in_adjacency_list
+    

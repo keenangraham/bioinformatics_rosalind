@@ -236,6 +236,12 @@ class SolveTests(unittest.TestCase):
         ratio = 1.21428571429
         self.assertEqual(solve.transversion_ratio(sequences), ratio)
 
+    # p.32
+    def test_edges_needed_for_tree(self):
+        number, adjacency_list = 10, '1 2, 2 8, 4 10, 5 9, 6 10, 7 9'
+        edges_needed = 3
+        self.assertEqual(solve.edges_needed_for_tree(number, adjacency_list), edges_needed)
 
+        
 if __name__ == '__main__':
     unittest.main()
